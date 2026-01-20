@@ -2,33 +2,33 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Snake Game</title>
-    <script src="https://pygame-web.github.io/archives/0.8/pygbag.js"></script>
+    <title>Manojkumar's Snake Game</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
     <style>
         body { background-color: #000; color: #0f0; text-align: center; font-family: sans-serif; }
-        #game-container { width: 800px; height: 600px; margin: 20px auto; background: #111; border: 2px solid #333; }
-        .loading-text { font-size: 20px; margin-top: 200px; }
+        canvas { border: 2px solid #555; display: block; margin: 0 auto; }
+        #loading { margin-top: 50px; font-size: 20px; }
     </style>
 </head>
 <body>
-    <h1>🐍 Manojkumar's Snake Game</h1>
-    <div id="game-container">
-        <div id="status" class="loading-text">Downloading Python Environment...<br>Please wait (30-60 seconds)</div>
-    </div>
+    <h1>🐍 Snake Game</h1>
+    <div id="loading">Game is starting...</div>
+    <canvas id="canvas"></canvas>
 
-    <script>
-        // This function checks every 1 second if the engine is ready
-        const checkLibrary = setInterval(() => {
-            if (window.pygame && window.pygame.run) {
-                console.log("System Ready! Starting Game...");
-                document.getElementById('status').style.display = 'none';
-                
-                // Starts your prj1.py file
-                window.pygame.run("prj1.py", "game-container");
-                
-                clearInterval(checkLibrary); // Stops checking once started
-            }
-        }, 1000);
+    <script type="text/javascript">
+        async function main() {
+            let pyodide = await loadPyodide();
+            await pyodide.loadPackage("micropip");
+            const micropip = pyodide.pycmd("import micropip; micropip");
+            await micropip.install("pygame-ce"); // Installs the web version of pygame
+            
+            // This pulls your code directly
+            let pythonCode = await fetch('prj1.py').then(res => res.text());
+            
+            document.getElementById('loading').style.display = 'none';
+            await pyodide.runPythonAsync(pythonCode);
+        }
+        main();
     </script>
 </body>
 </html>
