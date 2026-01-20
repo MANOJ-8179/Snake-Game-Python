@@ -2,20 +2,30 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.10.5/brython.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.10.5/brython_stdlib.js"></script>
+    <title>Manojkumar's Snake Game</title>
+    <script src="https://pygame-web.github.io/archives/0.8/pygbag.js"></script>
     <style>
-        body { background-color: #000; color: #0f0; text-align: center; font-family: sans-serif; margin: 0; overflow: hidden; }
-        canvas { border: 2px solid #333; display: block; margin: 0 auto; }
+        body { background-color: #000; color: #0f0; text-align: center; font-family: sans-serif; }
+        #game-container { width: 800px; height: 600px; margin: 0 auto; background: #111; }
     </style>
 </head>
-<body onload="brython()">
-    <h1>🐍 Manojkumar's Snake Game</h1>
+<body>
+    <h1>🐍 Snake Game</h1>
     <div id="game-container"></div>
+    <div id="status">Connecting to Python Engine...</div>
 
-    <script type="text/python">
-        from browser import window, document
-        import prj1
+    <script>
+        // This waits for the Pygame library to actually exist in your browser
+        window.addEventListener('load', () => {
+            const check = setInterval(() => {
+                if (window.pygame && window.pygame.run) {
+                    document.getElementById('status').innerHTML = "Game Starting!";
+                    // Runs your file
+                    window.pygame.run("prj1.py", "game-container");
+                    clearInterval(check);
+                }
+            }, 1000);
+        });
     </script>
 </body>
 </html>
