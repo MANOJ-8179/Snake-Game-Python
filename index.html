@@ -3,36 +3,27 @@
 <head>
     <meta charset="utf-8">
     <title>Manojkumar's Snake Game</title>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script src="https://pygame-web.github.io/archives/0.8/pygbag.js"></script>
     <style>
-        body { background-color: #000; color: #0f0; text-align: center; font-family: sans-serif; }
-        canvas { border: 2px solid #555; display: block; margin: 0 auto; }
-        #loading { margin-top: 50px; font-size: 20px; }
+        body { background-color: #000; margin: 0; padding: 0; overflow: hidden; color: #0f0; text-align: center; font-family: sans-serif; }
+        #game_container { width: 800px; height: 600px; margin: 0 auto; background-color: #111; }
     </style>
 </head>
 <body>
     <h1>🐍 Snake Game</h1>
-    <div id="loading">Game is starting...</div>
-    <canvas id="canvas"></canvas>
+    <div id="game_container"></div>
+    <div id="status">Loading Game Engine...</div>
 
- <script type="text/javascript">
-        async function main() {
-            let pyodide = await loadPyodide();
-            await pyodide.loadPackage("micropip");
+    <script>
+        window.onload = function() {
+            // This version handles the library loading internally
+            window.pygame.run("prj1.py", "game_container");
             
-            // Fixed the typo here: changed pycmd to runPython
-            const micropip = pyodide.runPython("import micropip; micropip");
-            await micropip.install("pygame-ce"); 
-            
-            // This pulls your code directly from your GitHub
-            let pythonCode = await fetch('prj1.py').then(res => res.text());
-            
-            document.getElementById('loading').style.display = 'none';
-            
-            // This runs your game
-            await pyodide.runPythonAsync(pythonCode);
-        }
-        main();
+            // This hides the loading message after a few seconds
+            setTimeout(() => {
+                document.getElementById('status').style.display = 'none';
+            }, 5000);
+        };
     </script>
 </body>
 </html>
