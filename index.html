@@ -2,28 +2,20 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Manojkumar's Snake Game</title>
-    <script src="https://pygame-web.github.io/archives/0.8/pygbag.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.10.5/brython.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.10.5/brython_stdlib.js"></script>
     <style>
-        body { background-color: #000; margin: 0; padding: 0; overflow: hidden; color: #0f0; text-align: center; font-family: sans-serif; }
-        #game_container { width: 800px; height: 600px; margin: 0 auto; background-color: #111; }
+        body { background-color: #000; color: #0f0; text-align: center; font-family: sans-serif; margin: 0; overflow: hidden; }
+        canvas { border: 2px solid #333; display: block; margin: 0 auto; }
     </style>
 </head>
-<body>
-    <h1>Snake Game</h1>
-    <div id="game_container"></div>
-    <div id="status">Loading Game Engine...</div>
+<body onload="brython()">
+    <h1>🐍 Manojkumar's Snake Game</h1>
+    <div id="game-container"></div>
 
-    <script>
-        window.onload = function() {
-            // This version handles the library loading internally
-            window.pygame.run("prj1.py", "game_container");
-            
-            // This hides the loading message after a few seconds
-            setTimeout(() => {
-                document.getElementById('status').style.display = 'none';
-            }, 5000);
-        };
+    <script type="text/python">
+        from browser import window, document
+        import prj1
     </script>
 </body>
 </html>
