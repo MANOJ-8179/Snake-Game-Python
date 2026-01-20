@@ -15,17 +15,21 @@
     <div id="loading">Game is starting...</div>
     <canvas id="canvas"></canvas>
 
-    <script type="text/javascript">
+ <script type="text/javascript">
         async function main() {
             let pyodide = await loadPyodide();
             await pyodide.loadPackage("micropip");
-            const micropip = pyodide.pycmd("import micropip; micropip");
-            await micropip.install("pygame-ce"); // Installs the web version of pygame
             
-            // This pulls your code directly
+            // Fixed the typo here: changed pycmd to runPython
+            const micropip = pyodide.runPython("import micropip; micropip");
+            await micropip.install("pygame-ce"); 
+            
+            // This pulls your code directly from your GitHub
             let pythonCode = await fetch('prj1.py').then(res => res.text());
             
             document.getElementById('loading').style.display = 'none';
+            
+            // This runs your game
             await pyodide.runPythonAsync(pythonCode);
         }
         main();
