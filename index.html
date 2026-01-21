@@ -21,21 +21,22 @@
     h1 {
       text-shadow: 0 0 15px #00ff88;
       font-size: 2em;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+      text-align: center;
     }
 
     #score {
       font-size: 1.2em;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       color: #00ff88;
     }
 
     canvas {
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       box-shadow: 0 0 25px #00ff88;
       border: 3px solid #00ff88;
       border-radius: 10px;
-      transition: all 0.3s ease-in-out;
+      touch-action: none;
     }
 
     #gameOver {
@@ -80,6 +81,14 @@
       bottom: 10px;
       font-size: 0.9em;
       color: #ccc;
+      text-shadow: 0 0 5px #000;
+    }
+
+    @media (max-width: 600px) {
+      canvas {
+        width: 300px;
+        height: 300px;
+      }
     }
   </style>
 </head>
@@ -113,8 +122,40 @@
     let speed = 150;
     let game;
 
+    // Keyboard controls
     document.addEventListener("keydown", changeDirection);
     restartBtn.addEventListener("click", restartGame);
+
+    // Swipe controls (touch)
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    canvas.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    });
+
+    canvas.addEventListener("touchmove", (e) => {
+      if (!touchStartX || !touchStartY) return;
+      const touch = e.touches[0];
+      let deltaX = touch.clientX - touchStartX;
+      let deltaY = touch.clientY - touchStartY;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // horizontal swipe
+        if (deltaX > 30 && direction !== "LEFT") direction = "RIGHT";
+        else if (deltaX < -30 && direction !== "RIGHT") direction = "LEFT";
+      } else {
+        // vertical swipe
+        if (deltaY > 30 && direction !== "UP") direction = "DOWN";
+        else if (deltaY < -30 && direction !== "DOWN") direction = "UP";
+      }
+
+      // reset touch points
+      touchStartX = 0;
+      touchStartY = 0;
+    });
 
     function changeDirection(event) {
       const key = event.keyCode;
@@ -133,7 +174,7 @@
 
     function draw() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
-      ctx.fillRect(0, 0, 400, 400);
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Draw food
       ctx.fillStyle = "#ff0055";
@@ -173,12 +214,12 @@
 
       const newHead = { x: headX, y: headY };
 
-      // Check collision
+      // Collision check
       if (
         headX < 0 ||
         headY < 0 ||
-        headX >= 400 ||
-        headY >= 400 ||
+        headX >= canvas.width ||
+        headY >= canvas.height ||
         collision(newHead, snake)
       ) {
         gameOver();
